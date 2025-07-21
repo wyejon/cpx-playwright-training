@@ -1,5 +1,6 @@
 import { test } from '@playwright/test';
 import LoginPage from './common/pom/LoginPage';
+import ProductListingPage from './common/pom/ProductListingPage';
 
 // test.describe.configure({ mode: 'parallel' }); // Run all tests in this file in parallel
 
@@ -7,6 +8,9 @@ test('login using valid credentials', async ({ page }) => {
   const loginPage = new LoginPage(page);
   await loginPage.goto();
   await loginPage.loginWithValidCredentials('standard_user', 'secret_sauce');
+
+  const productListingPage = new ProductListingPage(page);
+  await productListingPage.isInPage();
 });
 
 test('login without username', async ({ page }) => {

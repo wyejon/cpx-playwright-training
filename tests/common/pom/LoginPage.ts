@@ -12,8 +12,6 @@ export default class LoginPage {
     constructor(page: Page) {
         this._page = page;
 
-        // TODO: test these different selectors to confirm they work as expected
-
         // There are several styles of selectors you can use in Playwright.  
         // You should always aim to use the selector that is most specific to the element you are trying to interact with.
         // Here are some examples:

@@ -21,7 +21,6 @@ test('login using valid credentials (fixtures version)', async ({ loginPage, pro
   await productListingPage.isInPage();
 });
 
-
 test('login without username', async ({ page }) => {
   const loginPage = new LoginPage(page);
   await loginPage.goto();

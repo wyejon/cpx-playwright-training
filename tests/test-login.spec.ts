@@ -5,6 +5,10 @@ import ProductListingPage from './common/pom/ProductListingPage';
 
 // test.describe.configure({ mode: 'parallel' }); // Run all tests in this file in parallel
 
+// Homework
+// ========
+// Instead of hardcoding the login credentials, can we pass them in via environment variables or a config file?
+
 test('login using valid credentials', async ({ page }) => { // non fixture version
   const loginPage = new LoginPage(page);
   await loginPage.goto();

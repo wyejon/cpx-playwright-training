@@ -1,5 +1,4 @@
 import { expect, Locator, Page } from '@playwright/test';
-import { text } from 'stream/consumers';
 
 export default class ProductListingPage {
     private readonly _page: Page;
@@ -8,7 +7,9 @@ export default class ProductListingPage {
     private readonly _title: Locator;
     private readonly _inventoryList: Locator;
     private readonly _inventoryItems: Locator;
+    private readonly _inventoryItemNames: Locator;
     private readonly _shoppingCartBadge: Locator
+    private readonly _productSortContainer: Locator;
 
     constructor(page: Page) {
         this._page = page;
@@ -16,7 +17,9 @@ export default class ProductListingPage {
         this._title = page.getByTestId('title');
         this._inventoryList = page.getByTestId('inventory-list');
         this._inventoryItems = this._inventoryList.getByTestId('inventory-item'); // chaining locators to find child elements
+        this._inventoryItemNames = this._inventoryItems.getByTestId('inventory-item-name'); // two-level chain
         this._shoppingCartBadge = page.locator('span.shopping_cart_badge'); // just for variety, using a CSS selector here
+        this._productSortContainer = page.getByTestId('product-sort-container');
     }
 
     /**
@@ -46,7 +49,7 @@ export default class ProductListingPage {
     private async locateCartButtonForProductName(buttonLabel: string, productName: string): Promise<Locator> {
         // First find the product by its name
         const inventoryItemNameLocator = this._page.getByText(productName, { exact: true });
-        // Find the parent inventory item that contains this product name
+        // Find the parent inventory item that contains this product name (reverse chaining, this is super useful!)
         const inventoryItemLocator = this._inventoryList.locator('.inventory_item').filter({ has: inventoryItemNameLocator });
         // Now find the "Add to cart" button within that inventory item
         return inventoryItemLocator.getByRole('button', { name: buttonLabel, exact: true });
@@ -78,5 +81,19 @@ export default class ProductListingPage {
     async validateShoppingCartBadge(expectedCount: number) {
         await expect(this._shoppingCartBadge).toBeVisible();
         await expect(this._shoppingCartBadge).toHaveText(expectedCount.toString());
+    }
+
+    /**
+     * Select an option from the product sort dropdown.
+     * 
+     * @param option The option to select from the product sort dropdown, e.g., "az", "za", "lohi", "hilo".
+     */
+    async selectProductSortOption(option: string) {
+        await this._productSortContainer.selectOption(option);
+    }
+
+    async getInventoryItemNames(): Promise<string[]> {
+        const names = await this._inventoryItemNames.allTextContents();
+        return names.map(name => name.trim()); // Trim whitespace from each name
     }
 }

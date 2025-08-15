@@ -52,7 +52,7 @@ export default class ProductListingPage {
         // Find the parent inventory item that contains this product name (reverse chaining, this is super useful!)
         const inventoryItemLocator = await this._inventoryItems.filter({ has: inventoryItemNameLocator });
         // Now find the "Add to cart" button within that inventory item
-        return await inventoryItemLocator.getByRole('button', { name: buttonLabel, exact: true });
+        return inventoryItemLocator.getByRole('button', { name: buttonLabel, exact: true });
     }
 
     /**

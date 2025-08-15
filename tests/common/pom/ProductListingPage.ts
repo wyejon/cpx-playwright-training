@@ -48,9 +48,9 @@ export default class ProductListingPage {
      */
     private async locateCartButtonForProductName(buttonLabel: string, productName: string): Promise<Locator> {
         // First find the product by its name
-        const inventoryItemNameLocator = await this._page.getByText(productName, { exact: true });
+        const inventoryItemNameLocator = this._page.getByText(productName, { exact: true });
         // Find the parent inventory item that contains this product name (reverse chaining, this is super useful!)
-        const inventoryItemLocator = await this._inventoryItems.filter({ has: inventoryItemNameLocator });
+        const inventoryItemLocator = this._inventoryItems.filter({ has: inventoryItemNameLocator });
         // Now find the "Add to cart" button within that inventory item
         return inventoryItemLocator.getByRole('button', { name: buttonLabel, exact: true });
     }

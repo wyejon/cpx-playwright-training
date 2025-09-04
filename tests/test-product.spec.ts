@@ -29,10 +29,7 @@ test('test the cart badge count by adding/removing products', async ({ productLi
   await productListingPage.validateShoppingCartBadge(1);
 
   await productListingPage.removeFromCart('Sauce Labs Bolt T-Shirt');
-  // Homework
-  // ========
-  // How can we check to ensure that the shopping cart badge count is now 0?
-  // await productListingPage.validateShoppingCartBadge(0);
+  await productListingPage.validateShoppingCartBadge(0);
 });
 
 test('test product sorting - a to z', async ({ productListingPage }) => {
@@ -51,11 +48,36 @@ test('test product sorting - a to z', async ({ productListingPage }) => {
 
 // Homework
 // ========
-// Test sorting by product name, z to a
+test('test product sorting - z to a', async ({ productListingPage }) => {
+  await productListingPage.selectProductSortOption('za');
+  const inventoryItemNames = await productListingPage.getInventoryItemNames();
+
+  // Note: as a principal, we don't want reimplement the sorting logic here, just validate the result
+  // hence we are hardcoding the expected results for assertions
+  expect(inventoryItemNames[0]).toEqual('Test.allTheThings() T-Shirt (Red)');
+  expect(inventoryItemNames[1]).toEqual('Sauce Labs Onesie');
+  expect(inventoryItemNames[2]).toEqual('Sauce Labs Fleece Jacket');
+  expect(inventoryItemNames[3]).toEqual('Sauce Labs Bolt T-Shirt');
+  expect(inventoryItemNames[4]).toEqual('Sauce Labs Bike Light');
+  expect(inventoryItemNames[5]).toEqual('Sauce Labs Backpack');
+});
 
 // Homework
 // ========
 // Test sorting by product price, low to high
+test('test product sorting - lo to hi', async ({ productListingPage }) => {
+  await productListingPage.selectProductSortOption('lohi');
+  const inventoryItemPrices = await productListingPage.getInventoryItemPrices();
+
+  // Note: as a principal, we don't want reimplement the sorting logic here, just validate the result
+  // hence we are hardcoding the expected results for assertions
+  expect(inventoryItemPrices[0]).toEqual(7.99);
+  expect(inventoryItemPrices[1]).toEqual(9.99);
+  expect(inventoryItemPrices[2]).toEqual(15.99);
+  expect(inventoryItemPrices[3]).toEqual(15.99);
+  expect(inventoryItemPrices[4]).toEqual(29.99);
+  expect(inventoryItemPrices[5]).toEqual(49.99);
+});
 
 // Homework
 // ========

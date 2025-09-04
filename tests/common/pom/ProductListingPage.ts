@@ -10,6 +10,7 @@ export default class ProductListingPage {
     private readonly _inventoryItemNames: Locator;
     private readonly _shoppingCartBadge: Locator
     private readonly _productSortContainer: Locator;
+    private readonly _inventoryItemPrice: Locator;
 
     constructor(page: Page) {
         this._page = page;
@@ -20,6 +21,7 @@ export default class ProductListingPage {
         this._inventoryItemNames = this._inventoryItems.getByTestId('inventory-item-name'); // two-level chain
         this._shoppingCartBadge = page.locator('span.shopping_cart_badge'); // just for variety, using a CSS selector here
         this._productSortContainer = page.getByTestId('product-sort-container');
+        this._inventoryItemPrice = this._inventoryItems.getByTestId('inventory-item-price');
     }
 
     /**
@@ -81,8 +83,13 @@ export default class ProductListingPage {
      * @param expectedCount The expected number of items in the shopping cart.
      */
     async validateShoppingCartBadge(expectedCount: number) {
-        await expect(this._shoppingCartBadge).toBeVisible();
-        await expect(this._shoppingCartBadge).toHaveText(expectedCount.toString());
+        if (expectedCount === 0) {
+            await expect(this._shoppingCartBadge).toBeHidden();
+            return;
+        } else {
+            await expect(this._shoppingCartBadge).toBeVisible();
+            await expect(this._shoppingCartBadge).toHaveText(expectedCount.toString());
+        }
     }
 
     /**
@@ -97,5 +104,10 @@ export default class ProductListingPage {
     async getInventoryItemNames(): Promise<string[]> {
         const names = await this._inventoryItemNames.allTextContents();
         return names.map(name => name.trim()); // Trim whitespace from each name
+    }
+
+    async getInventoryItemPrices(): Promise<number[]> {
+        const priceStrings = await this._inventoryItemPrice.allTextContents();
+        return priceStrings.map(priceStr => parseFloat(priceStr.replace('$', '').trim())); // Remove $ and convert to number
     }
 }
